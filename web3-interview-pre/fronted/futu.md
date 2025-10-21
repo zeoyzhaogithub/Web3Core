@@ -212,7 +212,9 @@ console.log(fibonacci(6));
 静态资源（如 CSS、JS、图片）的缓存（客户端首次获取资源后，会记录 Last-Modified 或 ETag；下次请求时携带这些信息，服务器判断资源未变，返回 304，减少带宽消耗）；
 频繁访问但很少更新的页面（如博客文章详情页）。
 关键特性：这是 “性能优化核心状态码”，仅返回响应头（无响应体），大幅减少数据传输量，是前端静态资源缓存的核心机制之一。
-12、4开头的状态码有哪些？
+
+### 12、4开头的状态码有哪些？
+
 401 Unauthorized（未授权，登录态失效 / 未登录）
 核心场景：你说的 “5 分钟后登录态失效，点击跳转” 就对应这个状态码。
 比如数字资产平台，用户登录态过期后，点击 “查看我的资产”：
@@ -245,18 +247,200 @@ console.log(fibonacci(6));
 客户端开始上传图片，但网络中断，服务器长时间没收到完整数据；
 服务器触发超时机制，返回 408 状态码；
 前端收到 408 后，提示用户 “网络超时，请重试”（比如让用户重新上传图片）。
-13、2开头的状态码
+
+### 13、2开头的状态码
+
 200 成功
-14、http的缓存机制
+
+### 14、http的缓存机制
+
 强制缓存
 协商缓存
-15、http和https的区别？
+
+### 15、http和https的区别？
+
 加密，端口号：http是80，https是443；证书要求：http没有证书要求，Https必须在服务器端部署SSL证书
-16、https的加密过程？
-17、跨域？
-18、同源策略？
-19、有哪些方法可以解决跨域？
-20、给你一个变量，怎么判断这个变量是不是数组？
-21、Node 里面的那个ESM（ECMAScript Module，ES 模块）跟 com- CommonJS 有了解过吗？
-22、常见的 web 安全吗？有哪些 web 安全是需要平常去注意的？
-23、什么是 CSRF？
+
+### 16、https的加密过程？
+
+### 17、跨域？
+
+### 18、同源策略？
+
+### 19、有哪些方法可以解决跨域？
+
+### 20、给你一个变量，怎么判断这个变量是不是数组？
+
+### 21、Node 里面的那个ESM（ECMAScript Module，ES 模块）跟 com- ### CommonJS 有了解过吗？
+
+### 22、常见的 web 安全吗？有哪些 web 安全是需要平常去注意的？
+
+### 23、什么是 CSRF？
+
+CSRF（Cross-Site Request Forgery，跨站请求伪造），本质是**黑客利用用户的“已登录状态”，诱导用户在不知情的情况下，向目标网站发送伪造的请求**（比如转账、改密码、发评论），服务器误以为是用户自己操作，从而完成攻击。
+
+**CSRF 能成功的核心条件（缺一个都不行）**
+
+1. **用户必须已登录目标网站**：有登录 Cookie 或 Token 等“身份凭证”，服务器才会认。  
+2. **用户必须访问黑客的恶意页面**：需要用户“上钩”（点链接、开邮件附件等）。  
+3. **目标网站的接口没做 CSRF 防护**：接口只要“有身份凭证就执行”，不验证请求是不是用户“主动意愿”发起的。
+
+举个最直观的例子（结合数字资产场景）
+
+1. **用户登录目标网站**：你在 `exchange.com`（数字资产平台）登录了账号，浏览器保存了登录 Cookie（此时服务器认定你的浏览器是“可信的”）。  
+2. **黑客诱导用户访问恶意页面**：你没退出 `exchange.com`，又不小心点开了黑客发来的链接（比如邮件里的 `hack.com/evil.html`）。  
+3. **恶意页面自动发伪造请求**：这个 `evil.html` 里藏了一段隐藏代码，比如：  
+
+   ```html
+   <!-- 看似是图片，实际是向 exchange.com 发转账请求 -->
+   <img src="https://exchange.com/api/transfer?to=黑客账号&amount=1000&coin=BTC" style="display:none">
+   ```
+
+4. **服务器误判为用户操作**：浏览器加载 `img` 时，会自动带着 `exchange.com` 的登录 Cookie 发请求。服务器看到“有登录态”，就认为是你主动发起的转账，直接执行操作——你的 1000 BTC 就被转走。
+
+最常用、最有效的方案是
+
+（一）**“Token 验证”**：  
+
+1. **前端登录后获取 CSRF-Token**：登录 `exchange.com` 时，服务器返回一个随机的、唯一的 `CSRF-Token`（比如存在页面隐藏域或本地存储）  
+2. **发请求时带上 Token**：每次发敏感请求（转账、改密码），都要在请求头（或表单）里带上这个 `CSRF-Token`，比如：  
+
+   ```javascript
+    // 转账请求示例（Axios）
+    axios.post('/api/transfer', 
+       { to: '目标账号', amount: 1000 },
+       { headers: { 'X-CSRF-Token': '服务器给的随机Token' } }
+    );
+   ```
+
+3. **服务器验证 Token**：收到请求后，服务器对比“请求带的 Token”和“当前用户会话中存储的 Token”——只有两者一致，才执行操作。  
+
+黑客的恶意页面拿不到用户的 `CSRF-Token`（同源策略限制），发请求时没带有效 Token，服务器就会拒绝，攻击就失败了。
+
+（二） 验证 Referer/Origin 请求头（低成本辅助验证）
+
+- **原理**：`Referer` 头记录了“请求来自哪个页面”，`Origin` 头记录了“请求来自哪个域名”。后端通过检查这两个头，确认请求是否来自自己的网站（而非黑客域名）。  
+- **用法**：  
+  比如你的数字资产平台域名是 `exchange.com`，后端收到转账请求时，检查 `Referer` 或 `Origin` 是否包含 `exchange.com`：  
+  - 若是，说明请求来自自己的页面，正常处理；  
+  - 若不是（比如来自 `hack.com`），直接拒绝。  
+- **优缺点**：  
+  - 优点：无需前端配合，后端改几行代码即可实现，适合快速临时防护；  
+  - 缺点：`Referer` 可被部分浏览器/工具篡改（比如隐私模式下可能不发送），`Origin` 在部分场景（如本地文件）可能为空，不能单独作为唯一防护手段，建议和 Token 配合使用。
+
+（三）SameSite Cookie（浏览器层面的防护，推荐配置）
+
+- **原理**：通过设置 Cookie 的 `SameSite` 属性，限制 Cookie 只能在“同站请求”中携带，跨站请求（如黑客网站的请求）不会带上 Cookie，从根源上阻止黑客利用登录态。  
+- **`SameSite` 可选值**：  
+  - `SameSite=Strict`：仅同站请求（完全一致的域名）才带 Cookie（比如 `exchange.com` 的页面请求 `exchange.com` 接口才带，`sub.exchange.com` 都不算），安全性最高但可能影响正常跨域业务；  
+  - `SameSite=Lax`（推荐）：允许“同站请求”和“顶级导航的跨站请求”（比如从 `blog.com` 点击链接跳转到 `exchange.com` 时带 Cookie），但禁止“嵌入在黑客页面里的请求”（如 `<img>`、`<script>` 发起的跨站请求），兼顾安全和用户体验。  
+- **用法**：后端在设置登录 Cookie 时，添加 `SameSite=Lax` 属性：  
+
+  ```http
+  // 响应头设置示例（Node.js/Express）
+  res.cookie('sessionId', '用户的登录凭证', {
+    sameSite: 'lax', // 关键配置
+    httpOnly: true, // 防止 JS 读取 Cookie（防 XSS）
+    secure: true // 仅 HTTPS 传输
+  });
+  ```  
+
+  这样，黑客页面里的 `<img src="exchange.com/transfer">` 请求，浏览器会自动不带 `sessionId` Cookie，服务器因没登录态而拒绝。  
+
+（二）、前后端完整代码示例（Token 验证方案）
+
+以“数字资产平台转账接口”为例，展示如何用 Token 防范 CSRF：
+
+1. 后端（Node.js/Express）
+
+```javascript
+const express = require('express');
+const session = require('express-session');
+const app = express();
+
+// 1. 初始化会话（存储用户的 CSRF-Token）
+app.use(session({
+  secret: 'your-secret-key', // 加密会话的密钥
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production', // 生产环境用 HTTPS
+    sameSite: 'lax' // 配合 SameSite 增强安全
+  }
+}));
+
+// 2. 登录接口：生成并返回 CSRF-Token
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  // 假设验证成功，生成随机 Token 并存到当前会话
+  const csrfToken = require('crypto').randomBytes(16).toString('hex');
+  req.session.csrfToken = csrfToken; 
+  // 返回 Token 给前端（前端存到本地，比如 localStorage 或页面隐藏域）
+  res.json({ 
+    success: true, 
+    csrfToken: csrfToken,
+    message: '登录成功'
+  });
+});
+
+// 3. 转账接口：验证 CSRF-Token
+app.post('/api/transfer', (req, res) => {
+  const { to, amount } = req.body;
+  const clientToken = req.headers['x-csrf-token']; // 前端从请求头传的 Token
+  
+  // 验证 Token：会话中的 Token 和请求带的 Token 必须一致
+  if (!clientToken || clientToken !== req.session.csrfToken) {
+    return res.status(403).json({ error: 'CSRF 验证失败，拒绝操作' });
+  }
+  
+  // Token 验证通过，执行转账逻辑
+  console.log(`转账成功：${amount} BTC 到 ${to}`);
+  res.json({ success: true, message: '转账完成' });
+});
+
+app.listen(3000, () => console.log('服务器启动在 3000 端口'));
+```
+
+2. 前端（JavaScript）
+
+```html
+<!-- 登录页面 -->
+<script>
+  // 登录成功后保存 CSRF-Token
+  async function login() {
+    const res = await fetch('/login', {
+      method: 'POST',
+      body: JSON.stringify({ username: 'user', password: 'pass' }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if (data.success) {
+      localStorage.setItem('csrfToken', data.csrfToken); // 存 Token
+    }
+  }
+
+  // 转账功能：请求头携带 CSRF-Token
+  async function transfer() {
+    const csrfToken = localStorage.getItem('csrfToken');
+    const res = await fetch('/api/transfer', {
+      method: 'POST',
+      body: JSON.stringify({ to: 'targetAccount', amount: 1000 }),
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken // 关键：带上 Token
+      }
+    });
+    const data = await res.json();
+    console.log(data); // 转账结果
+  }
+</script>
+```
+
+总结
+
+- **核心方案**：`CSRF-Token` 验证（最可靠，前后端配合）；  
+- **辅助方案**：`SameSite=Lax` Cookie（浏览器自动拦截，零前端成本） + `Referer/Origin` 检查（低成本补充）；  
+- **注意**：这些方案可组合使用（比如 Token + SameSite Cookie），安全性更高。  
+
+这样配置后，黑客即使诱导用户访问恶意页面，也因拿不到 Token 或 Cookie 不被携带，无法完成 CSRF 攻击。
