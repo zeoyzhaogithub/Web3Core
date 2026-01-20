@@ -1,0 +1,127 @@
+# Counter合约
+
+编写合约代码
+在scripts文件夹下编写部署脚本
+
+```bash
+# 启动服务：
+npx hardhat node
+
+import一个hardhat上的调试合约
+import "hardhat/console.sol";
+
+
+# 在另一个控制台部署合约：
+npx hardhat run ./scripts/deploy-counter.ts --network localhost
+# 将该命令或配置在package.json中，方便后续调用,npm run deploy:local
+
+# 启动web应用
+npm run dev
+```
+
+## Counter Transaction
+
+```solidity
+pragma solidity ^0.8.0;
+
+import "hardhat/console.sol";
+
+contract Counter {
+ uint counter;
+ 
+ function count() public returns (uint){
+  counter++;
+  console.log("Now, Counter is", counter);
+  return counter;
+ }
+}
+```
+
+## Deploy
+
+---
+
+```solidity
+import "@nomicfoundation/hardhat-ethers";
+import {ethers} from "hardhat";
+
+async function deploy(){
+ const Counter = await ethers.getContractFactory("Counter");
+ const counter = await Counter.deploy();
+ await counter.deployed();
+ 
+ return counter;
+}
+
+async function count(counter){
+ console.log("Counter",await counter.count());
+}
+
+deploy().then(count);
+```
+
+## Output
+
+---
+
+```solidity
+ContractTransactionResponse {
+  provider: HardhatEthersProvider {
+    _hardhatProvider: LazyInitializationProviderAdapter {
+      _providerFactory: [AsyncFunction (anonymous)],
+      _emitter: [EventEmitter],
+      _initializingPromise: [Promise],
+      provider: [BackwardsCompatibilityProviderAdapter]
+    },
+    _networkName: 'localhost',
+    _blockListeners: [],
+    _transactionHashListeners: Map(0) {},
+    _eventListeners: []
+  },
+  blockNumber: 2,
+  blockHash: '0xe804c8bb62b0a1d1316b26f779f9fb37dfb688c4d4d2d6e4f5f0ca796a6b5e04',
+  index: undefined,
+  hash: '0x98556283c837de2b302406131caf897a58e264b820731b1cd12e8ccc3b6ffdc4',
+  type: 2,
+  to: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  nonce: 1,
+  gasLimit: 30000000n,
+  gasPrice: 971220890n,
+  maxPriorityFeePerGas: 232421875n,
+  maxFeePerGas: 971220890n,
+  maxFeePerBlobGas: null,
+  data: '0x06661abd',
+  value: 0n,
+  chainId: 31337n,
+  signature: Signature { r: "0x12a55d1bad798cddef56e2c656f17fe7348be0cf595b18868361aba734e72fec", s: "0x3627fc88eb06b9a5557923a7a7d86f0080c3c6fe7fd99a256aa4ee7340dcfc33", yParity: 1, networkV: null },
+  accessList: [],
+  blobVersionedHashes: null
+}
+```
+
+## run
+
+---
+
+```bash
+npx hardhat run scripts/deploy-counter.ts --network localhost
+```
+
+---
+
+没有返回count数字，没有获取到data。
+
+为什么？
+
+- 使用gas
+- 不使用gas
+
+改变了网络状态，这种就属于transaction，因此我们没有获取到返回的data数据。
+
+这个更改状态是一个异步的操作（需要添加新的块，新的块添加需要时间）
+
+- 先提交
+- 等待提交完成（block添加到区块链链上）
+
+storage 是一个会产生较大开销的操作， 修改任何区块链状态，都需要支付费用
