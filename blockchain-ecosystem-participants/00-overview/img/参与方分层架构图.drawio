@@ -1,0 +1,119 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.4">
+  <diagram name="参与方分层架构图" id="layered-architecture">
+    <mxGraphModel dx="1348" dy="1889" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="OuterFrame" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;strokeWidth=4;dashed=0;dashPattern=8 8;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0]];arcSize=0;" vertex="1">
+          <mxGeometry height="1390" width="1370" x="30" y="-320" as="geometry" />
+        </mxCell>
+        <mxCell id="Title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#000000;" vertex="1">
+          <mxGeometry height="40" width="1500" x="30" y="-350" as="geometry" />
+          <mxCell id="root" value="区块链生态参与方分层架构图" as="value" />
+        </mxCell>
+        <mxCell id="Layer5" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#7b1fa2;fontStyle=1;fontSize=16;fontColor=#000000;strokeWidth=2;startSize=50;swimlaneFillColor=#e1bee7;" value="第5层：监管与合规层&#xa;边界设定者 | 3类参与方" vertex="1">
+          <mxGeometry height="420" width="390" x="40" y="-310" as="geometry" />
+        </mxCell>
+        <mxCell id="L5A" parent="Layer5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#7b1fa2;strokeWidth=2;fontSize=15;fontColor=#000000;" value="各国监管机构&#xa;SEC/CFTC/VARA等" vertex="1">
+          <mxGeometry height="80" width="280" x="70" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L5B" parent="Layer5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#7b1fa2;strokeWidth=2;fontSize=15;fontColor=#000000;" value="国际组织&#xa;FATF/BIS" vertex="1">
+          <mxGeometry height="80" width="280" x="70" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="L5C" parent="Layer5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#7b1fa2;strokeWidth=2;fontSize=15;fontColor=#000000;" value="合规服务商&#xa;KYC/AML解决方案" vertex="1">
+          <mxGeometry height="80" width="280" x="70" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="Layer4" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;fontStyle=1;fontSize=16;fontColor=#000000;strokeWidth=2;startSize=50;swimlaneFillColor=#b3e5fc;" value="第4层：辅助与服务层&#xa;生态支持者 | 6类参与方" vertex="1">
+          <mxGeometry height="420" width="620" x="510" y="-310" as="geometry" />
+        </mxCell>
+        <mxCell id="L4A" parent="Layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;strokeWidth=2;fontSize=15;fontColor=#000000;" value="数据分析机构&#xa;Chainalysis/Nansen" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L4B" parent="Layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;strokeWidth=2;fontSize=15;fontColor=#000000;" value="审计与安全机构&#xa;CertiK/OpenZeppelin" vertex="1">
+          <mxGeometry height="70" width="220" x="340" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L4C" parent="Layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;strokeWidth=2;fontSize=15;fontColor=#000000;" value="开发者工具&#xa;Infura/Alchemy" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="L4D" parent="Layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;strokeWidth=2;fontSize=15;fontColor=#000000;" value="媒体与社区&#xa;CoinDesk/CoinTelegraph" vertex="1">
+          <mxGeometry height="70" width="220" x="340" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="L4E" parent="Layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;strokeWidth=2;fontSize=15;fontColor=#000000;" value="KYC服务商&#xa;Sumsub/Jumio" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="L4F" parent="Layer4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0277bd;strokeWidth=2;fontSize=15;fontColor=#000000;" value="价格服务商&#xa;Pyth Network/Chainlink" vertex="1">
+          <mxGeometry height="70" width="220" x="340" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="Layer3" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;fontStyle=1;fontSize=16;fontColor=#000000;strokeWidth=4;startSize=50;swimlaneFillColor=#1976d2;" value="第3层：交互与应用层 ⭐&#xa;价值交换与服务提供者 | 6类参与方" vertex="1">
+          <mxGeometry height="390" width="640" x="40" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="L3A" parent="Layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;strokeWidth=2;fontSize=15;fontColor=#000000;" value="中心化交易所&#xa;币安/Coinbase/OKX" vertex="1">
+          <mxGeometry height="70" width="220" x="50" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="L3B" parent="Layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;strokeWidth=2;fontSize=15;fontColor=#000000;" value="去中心化交易所&#xa;Uniswap/Curve" vertex="1">
+          <mxGeometry height="70" width="220" x="320" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="L3C" parent="Layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;strokeWidth=2;fontSize=15;fontColor=#000000;" value="钱包服务商&#xa;MetaMask/Ledger" vertex="1">
+          <mxGeometry height="70" width="220" x="50" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="L3D" parent="Layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;strokeWidth=2;fontSize=15;fontColor=#000000;" value="DeFi协议&#xa;Aave/dYdX" vertex="1">
+          <mxGeometry height="70" width="220" x="320" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="L3E" parent="Layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1976d2;strokeColor=#0d47a1;strokeWidth=2;fontSize=15;fontColor=#000000;" value="桥与跨链服务&#xa;Polygon Bridge" vertex="1">
+          <mxGeometry height="70" width="220" x="50" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="L3F" parent="Layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4caf50;strokeColor=#2e7d32;strokeWidth=3;fontSize=15;fontStyle=1;fontColor=#000000;" value="应用平台 ⭐&#xa;P2P平台&#xa;OpenSea" vertex="1">
+          <mxGeometry height="70" width="220" x="320" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="Layer2" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f57f17;fontStyle=1;fontSize=16;fontColor=#000000;strokeWidth=2;startSize=50;swimlaneFillColor=#fff9c4;" value="第2层：资产与发行层&#xa;价值创造与锚定者 | 4类参与方" vertex="1">
+          <mxGeometry height="260" width="640" x="40" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="L2A" parent="Layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f57f17;strokeWidth=2;fontSize=15;fontColor=#000000;" value="原生资产发行方&#xa;BTC/ETH" vertex="1">
+          <mxGeometry height="70" width="220" x="50" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L2B" parent="Layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f57f17;strokeWidth=2;fontSize=15;fontColor=#000000;" value="通证发行商&#xa;项目方" vertex="1">
+          <mxGeometry height="70" width="220" x="340" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L2C" parent="Layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffeb3b;strokeColor=#f57f17;strokeWidth=3;fontSize=15;fontStyle=1;fontColor=#000000;" value="稳定币发行商 ⭐&#xa;Tether/Circle/MakerDAO" vertex="1">
+          <mxGeometry height="70" width="220" x="50" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="L2D" parent="Layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f57f17;strokeWidth=2;fontSize=15;fontColor=#000000;" value="资产托管方&#xa;Coinbase Custody/BitGo" vertex="1">
+          <mxGeometry height="70" width="225" x="335" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="Layer1" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;fontStyle=1;fontSize=16;fontColor=#000000;strokeWidth=2;startSize=50;swimlaneFillColor=#e0e0e0;" value="第1层：基础层&#xa;网络构建与维护者 | 5类参与方" vertex="1">
+          <mxGeometry height="390" width="630" x="750" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="L1A" parent="Layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;strokeWidth=2;fontSize=15;fontColor=#000000;" value="节点运营商&#xa;Infura/Alchemy" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L1B" parent="Layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;strokeWidth=2;fontSize=15;fontColor=#000000;" value="矿工/验证者&#xa;PoW/PoS" vertex="1">
+          <mxGeometry height="70" width="220" x="330" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="L1C" parent="Layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;strokeWidth=2;fontSize=15;fontColor=#000000;" value="RPC服务商&#xa;Infura/Alchemy" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="L1D" parent="Layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;strokeWidth=2;fontSize=15;fontColor=#000000;" value="区块链协议开发者&#xa;以太坊基金会/TRON基金会" vertex="1">
+          <mxGeometry height="70" width="220" x="330" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="L1E" parent="Layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;strokeWidth=2;fontSize=15;fontColor=#000000;" value="区块链网络&#xa;以太坊/Base/TRON" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="Layer5" style="endArrow=classic;html=1;strokeColor=#7b1fa2;strokeWidth=3;dashed=1;dashPattern=8 8;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" target="Layer3" value="监管">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="Layer4" style="endArrow=classic;html=1;strokeColor=#0277bd;strokeWidth=3;dashed=1;dashPattern=8 8;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.542;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=15;" target="Layer3" value="服务支持">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="Layer3" style="endArrow=classic;html=1;strokeColor=#0d47a1;strokeWidth=3;dashed=1;dashPattern=8 8;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" target="Layer2" value="使用">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" edge="1" parent="1" source="Layer2" style="endArrow=classic;html=1;strokeColor=#f57f17;strokeWidth=3;dashed=1;dashPattern=8 8;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=15;" target="Layer1" value="发行">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" edge="1" parent="1" source="Layer4" style="endArrow=classic;html=1;strokeColor=#0277bd;strokeWidth=3;dashed=1;dashPattern=8 8;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.683;entryY=-0.01;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=15;" target="Layer1" value="支持">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
