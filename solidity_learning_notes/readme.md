@@ -12,6 +12,7 @@
 ```text
 solidity_learning_notes/
 ├── readme.md
+├── 学习计划.md
 ├── solidity/
 │   ├── 00_前言/
 │   ├── 01_solidity基础/
